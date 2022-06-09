@@ -2,7 +2,7 @@ export type Lens = {
   /** Latest version: "2021-11-01" */
   schemaVersion?: "2021-11-01" | (string & {});
   name: string;
-  description: string;
+  description?: string;
   pillars: {
     /** Default: `` `pillar_${i}` `` */
     id?: string;
@@ -17,7 +17,7 @@ export type Lens = {
         id: string;
         title: string;
         /** Provide `displayText` (default: `choice.title`) or `url`. */
-        improvementPlan: {
+        improvementPlan?: {
           displayText?: string;
           url?: string;
         };

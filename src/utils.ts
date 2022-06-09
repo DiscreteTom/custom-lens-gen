@@ -2,15 +2,18 @@ import * as fs from "fs";
 import { Lens } from "./model";
 
 export function formatLens(lens: Lens) {
-  lens.schemaVersion ??= "2021-11-01";
+  lens.schemaVersion ||= "2021-11-01";
+  lens.description ||= lens.name;
   lens.pillars ??= [];
   lens.pillars.map((p, i) => {
-    p.id ??= `pillar_${i}`;
+    p.id ||= `pillar_${i}`;
     p.questions ??= [];
     p.questions.map((q, j) => {
-      q.id ??= `${p.id}_${j}`;
+      q.id ||= `${p.id}_${j}`;
+      q.description ||= q.title;
       q.choices ??= [];
       q.choices.map((c) => {
+        c.improvementPlan ??= {};
         c.improvementPlan.displayText ??= c.title;
       });
       q.riskRules ??= [];

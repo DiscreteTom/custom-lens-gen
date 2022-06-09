@@ -1,7 +1,7 @@
 import * as fs from "fs";
 import { Lens } from "./model";
 
-type FormatOptions = {
+export type FormatOptions = {
   defaultRisk: "HIGH_RISK" | "MEDIUM_RISK" | "NO_RISK";
 };
 

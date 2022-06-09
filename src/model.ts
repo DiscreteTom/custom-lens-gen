@@ -13,8 +13,8 @@ export type Lens = {
       title: string;
       description?: string;
       choices: {
-        /** Choice ID is required since it will be referenced in `riskRules`. */
-        id: string;
+        /** Default: `` `choice_${i}` `` */
+        id?: string;
         title: string;
         /** Provide `displayText` (default: `choice.title`) or `url`. */
         improvementPlan?: {

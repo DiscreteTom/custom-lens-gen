@@ -18,7 +18,8 @@ export function formatLens(lens: Lens, options?: FormatOptions) {
       q.id ||= `${p.id}_${i}`;
       q.description ||= q.title;
       q.choices ??= [];
-      q.choices.map((c) => {
+      q.choices.map((c, j) => {
+        c.id ||= `choice_${j}`;
         c.improvementPlan ??= {};
         c.improvementPlan.displayText ??= c.title;
       });

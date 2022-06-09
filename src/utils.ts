@@ -14,6 +14,8 @@ export function formatLens(lens: Lens) {
         c.improvementPlan.displayText ??= c.title;
       });
       q.riskRules ??= [];
+      if (q.riskRules.filter((r) => r.condition == "default").length == 0)
+        q.riskRules.push({ condition: "default", risk: "NO_RISK" });
     });
   });
 }

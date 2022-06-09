@@ -1,4 +1,4 @@
-import { Lens, Pillar, RiskEnum } from "./model";
+import { Lens, Pillar, RiskEnum, RiskRule } from "./model";
 import { FormatOptions, saveTo } from "./utils";
 
 export type SimpleQuestion = {
@@ -14,6 +14,7 @@ export type SimpleQuestion = {
     helpfulResource?: { displayText?: string; url?: string };
     risk?: RiskEnum;
   }[];
+  riskRules?: RiskRule[];
 };
 
 export type SimpleLens = {
@@ -47,7 +48,8 @@ export function simpleToLens(simple: SimpleLens): Lens {
         riskRules: q.choices
           .filter((c) => c.risk)
           .map((c) => ({ condition: c.id, risk: c.risk }))
-          .sort((a, b) => riskToNumber(a.risk) - riskToNumber(b.risk)), // high risk first
+          .sort((a, b) => riskToNumber(a.risk) - riskToNumber(b.risk)) // high risk first
+          .concat(q.riskRules ?? []),
       })),
     });
   }

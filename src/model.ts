@@ -28,6 +28,7 @@ export type Lens = {
         condition: "default" | (string & {});
         risk: "HIGH_RISK" | "MEDIUM_RISK" | "NO_RISK";
       }[];
+      helpfulResource?: { displayText?: string; url?: string };
     }[];
   }[];
 };

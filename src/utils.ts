@@ -1,7 +1,13 @@
 import * as fs from "fs";
 import { Lens } from "./model";
 
-export function formatLens(lens: Lens) {
+type FormatOptions = {
+  defaultRisk: "HIGH_RISK" | "MEDIUM_RISK" | "NO_RISK";
+};
+
+export function formatLens(lens: Lens, options?: FormatOptions) {
+  options ??= { defaultRisk: "NO_RISK" };
+
   lens.schemaVersion ||= "2021-11-01";
   lens.description ||= lens.name;
   lens.pillars ??= [];
@@ -18,14 +24,14 @@ export function formatLens(lens: Lens) {
       });
       q.riskRules ??= [];
       if (q.riskRules.filter((r) => r.condition == "default").length == 0)
-        q.riskRules.push({ condition: "default", risk: "NO_RISK" });
+        q.riskRules.push({ condition: "default", risk: options.defaultRisk });
     });
   });
 }
 
 /** Format lens and save to file. */
-export function saveTo(file: string, lens: Lens) {
-  formatLens(lens);
+export function saveTo(file: string, lens: Lens, options?: FormatOptions) {
+  formatLens(lens, options);
   fs.writeFileSync(file, JSON.stringify(lens, null, 2), "utf-8");
 }
 

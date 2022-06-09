@@ -1,26 +1,26 @@
 import { Lens, Pillar } from "./model";
 import { FormatOptions, saveTo } from "./utils";
 
+export type SimpleQuestion = {
+  title: string;
+  description?: string;
+  choices: {
+    id?: string;
+    title: string;
+    improvementPlan?: {
+      displayText?: string;
+      url?: string;
+    };
+    helpfulResource?: { displayText?: string; url?: string };
+    risk?: "HIGH_RISK" | "MEDIUM_RISK" | "NO_RISK";
+  }[];
+};
+
 export type SimpleLens = {
   name: string;
   description?: string;
   pillars: {
-    [name: string]: {
-      questions: {
-        title: string;
-        description?: string;
-        choices: {
-          id?: string;
-          title: string;
-          improvementPlan?: {
-            displayText?: string;
-            url?: string;
-          };
-          helpfulResource?: { displayText?: string; url?: string };
-          risk: "HIGH_RISK" | "MEDIUM_RISK" | "NO_RISK";
-        }[];
-      }[];
-    };
+    [name: string]: SimpleQuestion[];
   };
 };
 
@@ -29,14 +29,14 @@ export function simpleToLens(simple: SimpleLens): Lens {
 
   for (const name in simple.pillars) {
     // generate choice ids
-    simple.pillars[name].questions.map((q) =>
+    simple.pillars[name].map((q) =>
       q.choices.map((c, i) => (c.id ??= `choice_${i}`))
     );
 
     // update pillars
     pillars.push({
       name,
-      questions: simple.pillars[name].questions.map((q) => ({
+      questions: simple.pillars[name].map((q) => ({
         title: q.title,
         description: q.description,
         choices: q.choices.map((c) => ({
@@ -44,7 +44,10 @@ export function simpleToLens(simple: SimpleLens): Lens {
           improvementPlan: c.improvementPlan,
           helpfulResource: c.helpfulResource,
         })),
-        riskRules: q.choices.map((c) => ({ condition: c.id, risk: c.risk })),
+        riskRules: q.choices
+          .filter((c) => c.risk)
+          .map((c) => ({ condition: c.id, risk: c.risk }))
+          .sort((a, b) => riskToNumber(a.risk) - riskToNumber(b.risk)), // high risk first
       })),
     });
   }
@@ -63,4 +66,15 @@ export function saveSimple(
   options?: FormatOptions
 ) {
   saveTo(file, simpleToLens(simple), options);
+}
+
+function riskToNumber(risk: "HIGH_RISK" | "MEDIUM_RISK" | "NO_RISK") {
+  switch (risk) {
+    case "HIGH_RISK":
+      return 3;
+    case "MEDIUM_RISK":
+      return 2;
+    case "NO_RISK":
+      return 1;
+  }
 }

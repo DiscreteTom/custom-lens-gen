@@ -1,5 +1,11 @@
 export type RiskEnum = "HIGH_RISK" | "MEDIUM_RISK" | "NO_RISK";
 
+export type RiskRule = {
+  /** E.g.: `choice1 && !choice2` */
+  condition: "default" | (string & {});
+  risk: RiskEnum;
+};
+
 export type Pillar = {
   /** Default: `pillar.name` */
   id?: string;
@@ -20,11 +26,7 @@ export type Pillar = {
       };
       helpfulResource?: { displayText?: string; url?: string };
     }[];
-    riskRules: {
-      /** E.g.: `choice1 && !choice2` */
-      condition: "default" | (string & {});
-      risk: RiskEnum;
-    }[];
+    riskRules: RiskRule[];
     helpfulResource?: { displayText?: string; url?: string };
   }[];
 };

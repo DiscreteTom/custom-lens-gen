@@ -24,6 +24,7 @@ export type Lens = {
         helpfulResource?: { displayText?: string; url?: string };
       }[];
       riskRules: {
+        /** E.g.: `choice1 && !choice2` */
         condition: "default" | (string & {});
         risk: "HIGH_RISK" | "MEDIUM_RISK" | "NO_RISK";
       }[];

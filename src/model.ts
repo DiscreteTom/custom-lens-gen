@@ -4,7 +4,7 @@ export type Lens = {
   name: string;
   description?: string;
   pillars: {
-    /** Default: `` `pillar_${i}` `` */
+    /** Default: `pillar.name` */
     id?: string;
     name: string;
     questions: {

@@ -1,4 +1,4 @@
-import { Lens, Pillar } from "./model";
+import { Lens, Pillar, RiskEnum } from "./model";
 import { FormatOptions, saveTo } from "./utils";
 
 export type SimpleQuestion = {
@@ -12,7 +12,7 @@ export type SimpleQuestion = {
       url?: string;
     };
     helpfulResource?: { displayText?: string; url?: string };
-    risk?: "HIGH_RISK" | "MEDIUM_RISK" | "NO_RISK";
+    risk?: RiskEnum;
   }[];
 };
 
@@ -68,7 +68,7 @@ export function saveSimple(
   saveTo(file, simpleToLens(simple), options);
 }
 
-function riskToNumber(risk: "HIGH_RISK" | "MEDIUM_RISK" | "NO_RISK") {
+function riskToNumber(risk: RiskEnum) {
   switch (risk) {
     case "HIGH_RISK":
       return 3;

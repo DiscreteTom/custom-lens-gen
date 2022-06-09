@@ -1,8 +1,8 @@
 import * as fs from "fs";
-import { Lens } from "./model";
+import { Lens, RiskEnum } from "./model";
 
 export type FormatOptions = {
-  defaultRisk: "HIGH_RISK" | "MEDIUM_RISK" | "NO_RISK";
+  defaultRisk: RiskEnum;
 };
 
 export function formatLens(lens: Lens, options?: FormatOptions) {

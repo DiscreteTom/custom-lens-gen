@@ -49,7 +49,23 @@ export function simpleToLens(simple: SimpleLens): Lens {
           .filter((c) => c.risk)
           .map((c) => ({ condition: c.id, risk: c.risk }))
           .sort((a, b) => riskToNumber(a.risk) - riskToNumber(b.risk)) // high risk first
-          .concat(q.riskRules ?? []),
+          .concat(q.riskRules ?? [])
+          .reduce(
+            // merge conditions with same risk
+            (p, c) => {
+              p.filter((x) => x.risk == c.risk)[0].conditions.push(
+                `(${c.condition})`
+              );
+              return p;
+            },
+            [
+              { conditions: [], risk: "NO_RISK" },
+              { conditions: [], risk: "MEDIUM_RISK" },
+              { conditions: [], risk: "HIGH_RISK" },
+            ] as { conditions: string[]; risk: RiskEnum }[]
+          )
+          .map((x) => ({ risk: x.risk, condition: x.conditions.join("||") })) // join conditions to one string
+          .filter((r) => r.condition.length), // condition not empty
       })),
     });
   }
